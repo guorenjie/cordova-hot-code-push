@@ -3,7 +3,7 @@ Helper module to work with config.xml file.
 We will use it to inject plugin-specific options.
 */
 
-
+var fs = require('fs');
 var path = require('path');
 var xmlHelper = require('./xmlHelper.js');
 var cordovaContext;
@@ -82,8 +82,15 @@ function pathToIosConfigXml() {
  * @return {String} absolute path to config.xml file
  */
 function pathToAndroidConfigXml() {
-  // return path.join(projectRoot, 'platforms', 'android', 'res', 'xml', 'config.xml');
-  return path.join(projectRoot, "platforms/android/app/src/main/res/xml/config.xml");
+  //android>=7.0
+  let configPath = path.join(projectRoot, 'platforms', 'android','app','src','main', 'res', 'xml', 'config.xml');
+  fs.access(configPath, fs.constants.F_OK, err => {
+    if(err) {
+        //android<7.0
+        configPath = path.join(projectRoot, 'platforms', 'android', 'res', 'xml', 'config.xml');
+    }
+    return configPath;
+});
 }
 
 /**
