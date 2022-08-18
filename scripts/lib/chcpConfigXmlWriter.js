@@ -84,13 +84,14 @@ function pathToIosConfigXml() {
 function pathToAndroidConfigXml() {
   //android>=7.0
   let configPath = path.join(projectRoot, 'platforms', 'android','app','src','main', 'res', 'xml', 'config.xml');
-  fs.access(configPath, fs.constants.F_OK, err => {
-    if(err) {
-        //android<7.0
-        configPath = path.join(projectRoot, 'platforms', 'android', 'res', 'xml', 'config.xml');
-    }
+  try{
+    fs.accessSync(configPath, fs.constants.F_OK);
     return configPath;
-});
+  }catch(e){
+    //android<7.0
+    configPath = path.join(projectRoot, 'platforms', 'android', 'res', 'xml', 'config.xml');
+    return configPath;
+  }
 }
 
 /**
